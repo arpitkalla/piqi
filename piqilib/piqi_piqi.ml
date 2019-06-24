@@ -420,6 +420,7 @@ and packed_parse_field_mode x =
 and parse_variant x =
   let x = Piqirun.parse_record x in
   let _protobuf_name, x = Piqirun.parse_optional_field 90072013 parse_string x in
+  let _field, x = Piqirun.parse_repeated_field 9671866 parse_field x in
   let _protobuf_custom, x = Piqirun.parse_repeated_field 112352691 parse_string x in
   let _name, x = Piqirun.parse_required_field 150958667 parse_name x in
   let _protobuf_oneof, x = Piqirun.parse_optional_field 154222907 parse_string x in
@@ -432,6 +433,7 @@ and parse_variant x =
     Variant.name = _name;
     Variant.protobuf_oneof = _protobuf_oneof;
     Variant.option = _option;
+    Variant.field = _field;
     Variant.json_name = _json_name;
   }
 
@@ -441,6 +443,7 @@ and parse_option x =
   let _deprecated, x = Piqirun.parse_required_field 69402483 parse_bool x ~default:"\b\000" in
   let _protobuf_name, x = Piqirun.parse_optional_field 90072013 parse_string x in
   let _name, x = Piqirun.parse_optional_field 150958667 parse_name x in
+  let _field, x = Piqirun.parse_repeated_field 9671866 parse_field x in
   let _getopt_letter, x = Piqirun.parse_optional_field 215188758 parse_word x in
   let _typename, x = Piqirun.parse_optional_field 218690234 parse_typename x in
   let _piq_format, x = Piqirun.parse_optional_field 296833484 parse_piq_format x in
@@ -453,6 +456,7 @@ and parse_option x =
     Option.deprecated = _deprecated;
     Option.protobuf_name = _protobuf_name;
     Option.name = _name;
+    Option.field = _field;
     Option.getopt_letter = _getopt_letter;
     Option.typename = _typename;
     Option.piq_format = _piq_format;
@@ -761,7 +765,8 @@ and gen__variant code x =
   let _protobuf_oneof = Piqirun.gen_optional_field 154222907 gen__string x.Variant.protobuf_oneof in
   let _option = Piqirun.gen_repeated_field 192598901 gen__option x.Variant.option in
   let _json_name = Piqirun.gen_optional_field 515275216 gen__string x.Variant.json_name in
-  Piqirun.gen_record code (_protobuf_name :: _protobuf_custom :: _name :: _protobuf_oneof :: _option :: _json_name :: [])
+  let _field = Piqirun.gen_repeated_field 9671866 gen__field x.Variant.field in
+  Piqirun.gen_record code (_protobuf_name :: _protobuf_custom :: _name :: _protobuf_oneof :: _option :: _field :: _json_name :: [])
 
 and gen__option code x =
   let _code = Piqirun.gen_optional_field 29667629 gen__int32 x.Option.code in
@@ -774,7 +779,8 @@ and gen__option code x =
   let _piq_alias = Piqirun.gen_optional_field 434682011 gen__name x.Option.piq_alias in
   let _getopt_doc = Piqirun.gen_optional_field 442330184 gen__string x.Option.getopt_doc in
   let _json_name = Piqirun.gen_optional_field 515275216 gen__string x.Option.json_name in
-  Piqirun.gen_record code (_code :: _deprecated :: _protobuf_name :: _name :: _getopt_letter :: _typename :: _piq_format :: _piq_alias :: _getopt_doc :: _json_name :: [])
+  let _field = Piqirun.gen_repeated_field 9671866 gen__field x.Option.field in
+  Piqirun.gen_record code (_code :: _deprecated :: _protobuf_name :: _name :: _field :: _getopt_letter :: _typename :: _piq_format :: _piq_alias :: _getopt_doc :: _json_name :: [])
 
 and gen__enum code x =
   let _protobuf_name = Piqirun.gen_optional_field 90072013 gen__string x.Enum.protobuf_name in
@@ -948,6 +954,7 @@ and default_variant () =
     Variant.name = default_name ();
     Variant.protobuf_oneof = None;
     Variant.option = [];
+    Variant.field = [];
     Variant.json_name = None;
   }
 and default_option () =
@@ -956,6 +963,7 @@ and default_option () =
     Option.deprecated = parse_bool (Piqirun.parse_default "\b\000");
     Option.protobuf_name = None;
     Option.name = None;
+    Option.field = [];
     Option.getopt_letter = None;
     Option.typename = None;
     Option.piq_format = None;
